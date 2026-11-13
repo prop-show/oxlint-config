@@ -1,6 +1,6 @@
 {
   "name": "@prop-show/oxlint-config",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "可共享的个人 oxlint + oxfmt 配置：base / typescript / react / vue 四套 lint preset，外加 fmt 格式化配置。",
   "keywords": [
     "config",
