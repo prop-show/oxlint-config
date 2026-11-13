@@ -3,6 +3,8 @@ name: release
 on:
   push:
     branches: [main]
+  # 修完配置后可以手动重跑，不用再抬版本号
+  workflow_dispatch:
 
 permissions:
   contents: write
