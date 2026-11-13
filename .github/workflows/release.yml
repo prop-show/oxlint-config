@@ -1,54 +1,15 @@
-name: release
+name: Release
 
 on:
   push:
-    branches: [main]
-  # 修完配置后可以手动重跑，不用再抬版本号
-  workflow_dispatch:
-
-permissions:
-  contents: write
-  id-token: write
-
-concurrency:
-  group: release
-  cancel-in-progress: false
+    tags:
+      - "v*"
 
 jobs:
   release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - uses: voidzero-dev/setup-vp@v1.22.0
-        with:
-          node-version: "24"
-          # 发布构建不吃依赖缓存
-          cache: false
-
-      - name: 读取版本，判断是否已发过
-        id: version
-        run: |
-          version=$(node -p "require('./package.json').version")
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          if git rev-parse --quiet --verify "refs/tags/v$version" > /dev/null; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: 校验
-        if: steps.version.outputs.changed == 'true'
-        run: vp check
-
-      - name: 测试
-        if: steps.version.outputs.changed == 'true'
-        run: vp test
-
-      # 先发 npm：失败就停，不会留下指向未发布版本的 tag
-      # trusted publishing：靠 id-token 换短期凭据，不要放 token，也不要写 .npmrc
-      - name: 发布到 npm
-        if: steps.version.outputs.changed == 'true'
-        run: pnpm publish --no-git-checks
+    uses: sxzz/workflows/.github/workflows/release.yml@v2
+    with:
+      publish: true
+    permissions:
+      contents: write
+      id-token: write
