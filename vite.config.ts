@@ -8,6 +8,7 @@ export default defineConfig({
   },
   pack: {
     entry: ["src/index.ts", "src/lint/index.ts", "src/fmt/index.ts"],
+    format: ["esm"],
     deps: {
       // tsdown <0.23 compatibility: resolve external dependency subpaths.
       // Remove to preserve subpath imports as written (the new default).
