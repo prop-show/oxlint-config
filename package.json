@@ -1,0 +1,54 @@
+{
+  "name": "@prop-show/oxlint-config",
+  "version": "0.0.0",
+  "description": "可共享的个人 oxlint + oxfmt 配置：base / typescript / react / vue 四套 lint preset，外加 fmt 格式化配置。",
+  "keywords": [
+    "config",
+    "lint",
+    "oxfmt",
+    "oxlint",
+    "oxlint-config"
+  ],
+  "homepage": "https://github.com/prop-show/oxlint-config#readme",
+  "bugs": {
+    "url": "https://github.com/prop-show/oxlint-config/issues"
+  },
+  "license": "MIT",
+  "author": "Whbbit1999 <whbbit@qq.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prop-show/oxlint-config.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./fmt": "./dist/fmt/index.mjs",
+    "./lint": "./dist/lint/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch",
+    "test": "vp test",
+    "check": "vp check",
+    "prepublishOnly": "vp run build",
+    "prepare": "vp config"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.18.0",
+      "onFail": "download"
+    }
+  }
+}
