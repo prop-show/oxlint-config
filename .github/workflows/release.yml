@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 concurrency:
   group: release
@@ -14,8 +15,6 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -24,7 +23,8 @@ jobs:
       - uses: voidzero-dev/setup-vp@v1.22.0
         with:
           node-version: "24"
-          cache: true
+          # 发布构建不吃依赖缓存
+          cache: false
 
       - name: 读取版本，判断是否已发过
         id: version
@@ -46,13 +46,10 @@ jobs:
         run: vp test
 
       # 先发 npm：失败就停，不会留下指向未发布版本的 tag
+      # trusted publishing：靠 id-token 换短期凭据，不要放 token，也不要写 .npmrc
       - name: 发布到 npm
-        if: steps.version.outputs.changed == 'true' && env.NPM_TOKEN != ''
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
-          pnpm publish --no-git-checks
+        if: steps.version.outputs.changed == 'true'
+        run: pnpm publish --no-git-checks
 
       - name: 打 tag 并创建 GitHub Release
         if: steps.version.outputs.changed == 'true'
