@@ -52,13 +52,3 @@ jobs:
       - name: 发布到 npm
         if: steps.version.outputs.changed == 'true'
         run: pnpm publish --no-git-checks
-
-      - name: 打 tag 并创建 GitHub Release
-        if: steps.version.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: v${{ steps.version.outputs.version }}
-        run: |
-          git tag "$TAG"
-          git push origin "$TAG"
-          gh release create "$TAG" --title "$TAG" --generate-notes
